@@ -44,7 +44,7 @@ const pubnubConfig = {
 export default function App() {
   const [userProfile, setUserProfile] = useState(() => getRandomUserProfile());
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [yjsProvider] = useState<null | Provider>(null);
+  const [yjsProvider, setYjsProvider] = useState<null | Provider>(null);
   const [activeUsers, setActiveUsers] = useState<ActiveUserProfile[]>([]);
 
   const handleAwarenessUpdate = useCallback(() => {
@@ -114,6 +114,10 @@ export default function App() {
                 params: pubnubConfig,
               }
             ) as unknown as Provider;
+
+            // This is a hack to get reference to provider with standard CollaborationPlugin.
+            // To be fixed in future versions of Lexical.
+            setTimeout(() => setYjsProvider(provider), 0);
             return provider;
           }}
           // Unless you have a way to avoid race condition between 2+ users trying to do bootstrap simultaneously
