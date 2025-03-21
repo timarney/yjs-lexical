@@ -1,30 +1,41 @@
 export const Footer = () => {
   return (
     <footer
-      className="flex-none border-0 bg-gray-100 px-24 mt-0 lg:mt-0"
+      className="flex-none border-0 bg-gray-100 px-4 md:px-8 lg:px-12 mt-0"
       data-testid="footer"
     >
-      <div className="flex flex-row items-center justify-between pb-5 pt-10 lg:flex-col lg:items-start lg:gap-4">
+      <div className="mx-auto max-w-[1200px] flex flex-col lg:flex-row items-start lg:items-center justify-between py-6">
         <div>
           <nav aria-label="Footer">
             <span className="mr-10 inline-block">
               <a
-                className="whitespace-nowrap"
-                href="https://articles.alpha.canada.ca/forms-formulaires/?utm_source=EN_FormsFooter&amp;utm_medium=Product&amp;utm_campaign=forms_product"
+                className="whitespace-nowrap underline hover:no-underline"
+                href="#"
                 target="_blank"
               >
                 About GC Forms
               </a>
               <span className="px-3">•</span>
-              <a className="whitespace-nowrap" href="/en/terms-of-use">
+              <a
+                className="whitespace-nowrap underline hover:no-underline"
+                href="#"
+              >
                 Terms of use
               </a>
               <span className="px-3">•</span>
-              <a className="whitespace-nowrap" href="/en/sla">
+              <a
+                className="whitespace-nowrap underline hover:no-underline"
+                href="#"
+              >
                 Service-level agreement
               </a>
               <span className="px-3">•</span>
-              <a href="/en/support">Support</a>
+              <a
+                className="whitespace-nowrap underline hover:no-underline"
+                href="#"
+              >
+                Support
+              </a>
             </span>
           </nav>
         </div>

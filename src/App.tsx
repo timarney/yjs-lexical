@@ -8,9 +8,9 @@ import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import * as Y from "yjs";
 import { WebsocketProvider } from "y-websocket";
 
-import Editor from "./Editor";
-import ExampleTheme from "./ExampleTheme";
-import { getRandomUserProfile, UserProfile } from "./getRandomUserProfile";
+import Editor from "./Editor/Editor";
+import Theme from "./Editor/Theme";
+import { getRandomUserProfile, UserProfile } from "./Editor/getRandomUserProfile";
 
 interface ActiveUserProfile extends UserProfile {
   userId: number;
@@ -28,7 +28,7 @@ const editorConfig = {
     throw error;
   },
   // The editor theme
-  theme: ExampleTheme,
+  theme: Theme,
 };
 
 const pubnubConfig = {

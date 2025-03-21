@@ -4,7 +4,7 @@ import { Footer } from "./Footer";
 
 export const Layout = ({ children }: { children: ReactNode }) => {
   return (
-    <div>
+    <div className="grid min-h-screen grid-rows-[auto_1fr_auto]">
       <Header />
       <main className="bg-gray-50">{children}</main>
       <Footer />
