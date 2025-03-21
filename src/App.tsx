@@ -4,17 +4,18 @@ import type { Provider } from "@lexical/yjs";
 
 import { CollaborationPlugin } from "@lexical/react/LexicalCollaborationPlugin";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
-import { Fragment, useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import * as Y from "yjs";
 import { WebsocketProvider } from "y-websocket";
 
-import Editor from "./Editor/Editor";
 import Theme from "./Editor/Theme";
-import { getRandomUserProfile, UserProfile } from "./Editor/getRandomUserProfile";
+import Editor from "./Editor/Editor";
 
-interface ActiveUserProfile extends UserProfile {
-  userId: number;
-}
+import { ActiveUsers } from "./Editor/ActiveUsers";
+import {
+  getRandomUserProfile,
+  ActiveUserProfile,
+} from "./Editor/getRandomUserProfile";
 
 const editorConfig = {
   // NOTE: This is critical for collaboration plugin to set editor state to null. It
@@ -71,11 +72,13 @@ export default function App() {
   }, [yjsProvider, handleAwarenessUpdate]);
 
   return (
-    <div ref={containerRef} className="p-4">
-      <p>
-        <b>My Name:</b>{" "}
+    <div ref={containerRef} className="relative">
+      <div className="flex justify-center items-center p-4">
+        <span className="inline-block mr-2">Name:</span>{" "}
         <input
+          className="border border-gray-300 p-1"
           type="text"
+          placeholder="Your name"
           value={userProfile.name}
           onChange={(e) =>
             setUserProfile((profile) => ({ ...profile, name: e.target.value }))
@@ -83,21 +86,18 @@ export default function App() {
         />{" "}
         <input
           type="color"
+          className="p-2 h-[50px] w-[50px]"
           value={userProfile.color}
           onChange={(e) =>
             setUserProfile((profile) => ({ ...profile, color: e.target.value }))
           }
         />
-      </p>
-      <p>
-        <b>Active users!:</b>{" "}
-        {activeUsers.map(({ name, color, userId }, idx) => (
-          <Fragment key={userId}>
-            <span style={{ color }}>{name}</span>
-            {idx === activeUsers.length - 1 ? "" : ", "}
-          </Fragment>
-        ))}
-      </p>
+      </div>
+
+      <div className="absolute top-4 right-4 z-10">
+        <ActiveUsers users={activeUsers} />
+      </div>
+
       <LexicalComposer initialConfig={editorConfig}>
         {/* With CollaborationPlugin - we MUST NOT use @lexical/react/LexicalHistoryPlugin */}
         <CollaborationPlugin

@@ -30,6 +30,10 @@ export interface UserProfile {
   color: string;
 }
 
+export interface ActiveUserProfile extends UserProfile {
+  userId: number;
+}
+
 export function getRandomUserProfile(): UserProfile {
   const entry = entries[Math.floor(Math.random() * entries.length)];
   return {
