@@ -42,9 +42,6 @@ const pubnubConfig = {
   subscribeKey: "sub-c-fc2b820b-4687-49c5-83af-b477da7d6b4b",
 };
 
-
-console.log("PubNub config", pubnubConfig);
-
 export default function App() {
   const [userProfile, setUserProfile] = useState(() => getRandomUserProfile());
   const containerRef = useRef<HTMLDivElement | null>(null);
