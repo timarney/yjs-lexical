@@ -1,0 +1,30 @@
+{
+  "name": "app",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "wrangler pages dev",
+    "deploy": "bun run build && wrangler pages deploy"
+  },
+  "dependencies": {
+    "@lexical/react": "^0.28.0",
+    "@lexical/yjs": "^0.28.0",
+    "hono": "^4.7.5",
+    "lexical": "^0.28.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "y-webrtc": "^10.3.0",
+    "y-websocket": "^2.1.0",
+    "yjs": "^13.6.24"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250214.0",
+    "@hono/vite-build": "^1.2.0",
+    "@hono/vite-dev-server": "^0.18.2",
+    "@types/react": "^19.0.12",
+    "@types/react-dom": "^19.0.4",
+    "vite": "^6.1.1",
+    "wrangler": "^3.109.2"
+  }
+}
