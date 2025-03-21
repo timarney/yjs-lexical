@@ -71,7 +71,7 @@ export default function App() {
   }, [yjsProvider, handleAwarenessUpdate]);
 
   return (
-    <div ref={containerRef}>
+    <div ref={containerRef} className="p-4">
       <p>
         <b>My Name:</b>{" "}
         <input

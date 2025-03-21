@@ -11,7 +11,6 @@ import {LexicalErrorBoundary} from '@lexical/react/LexicalErrorBoundary';
 import {RichTextPlugin} from '@lexical/react/LexicalRichTextPlugin';
 
 import ToolbarPlugin from './plugins/ToolbarPlugin';
-import TreeViewPlugin from './plugins/TreeViewPlugin';
 
 function Placeholder() {
   return <div className="editor-placeholder">Enter some rich text...</div>;
@@ -28,7 +27,6 @@ export default function Editor() {
           ErrorBoundary={LexicalErrorBoundary}
         />
         <AutoFocusPlugin />
-        <TreeViewPlugin />
       </div>
     </div>
   );
