@@ -7,22 +7,21 @@
  */
 
 const entries: [string, string][] = [
-  ['Arabian', '#7d0000'],
-  ['Appaloosa', '#640000'],
-  ['Friesian', '#990000'],
-  ['Thoroughbred', '#bf0000'],
-  ['Warmblood', '#bf4000'],
-  ['Saddlebred', '#004000'],
-  ['Mustang', '#007f00'],
-  ['Trakehner', '#407f00'],
-  ['Quarter Horse', '#7f7f00'],
-  ['Clydesdale', '#000099'],
-  ['Paint', '#0000bf'],
-  ['Icelandic', '#0000ff'],
-  ['Andalusian', '#004040'],
-  ['Tennessee Walker', '#404040'],
-  ['Ukrainian Riding Horse', '#7f0040'],
-  ['Percheron', '#bf0040'],
+  ['Trudeau', '#d62728'],
+  ['Harper', '#1f77b4'],
+  ['Martin', '#ff7f0e'],
+  ['Chrétien', '#2ca02c'],
+  ['Campbell', '#9467bd'],
+  ['Mulroney', '#8c564b'],
+  ['Turner', '#e377c2'],
+  ['Clark', '#bcbd22'],
+  ['Pearson', '#17becf'],
+  ['Diefenbaker', '#aec7e8'],
+  ['Laurent', '#ffbb78'],
+  ['King', '#98df8a'],
+  ['Meighen', '#c5b0d5'],
+  ['Borden', '#c49c94'],
+  ['Laurier', '#f7b6d2'],
 ];
 
 export interface UserProfile {
