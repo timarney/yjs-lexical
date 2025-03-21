@@ -1,12 +1,13 @@
-import { Hono } from 'hono'
-import { renderer } from './renderer'
+import { Hono } from "hono";
+import { renderer } from "./renderer";
+import { TodoList } from "./client";
 
-const app = new Hono()
+const app = new Hono();
 
-app.use(renderer)
+app.use(renderer);
 
-app.get('/', (c) => {
-  return c.render(<h1>Hello! Test </h1>)
-})
+app.get("/", (c) => {
+  return c.render(<TodoList />);
+});
 
-export default app
+export default app;
