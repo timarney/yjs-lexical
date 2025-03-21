@@ -108,14 +108,14 @@ export default function App() {
       <p>
         <b>Used provider:</b>{' '}
         {providerName === 'webrtc'
-          ? 'WebRTC (within browser communication via BroadcastChannel fallback, unless run locally)'
+          ? 'WebRTC (within browser communication via BroadcastChannel fallback, unless run locally)!'
           : 'Websockets (cross-browser communication)'}
         <br />
         {window.location.hostname === 'localhost' ? (
           providerName === 'webrtc' ? (
-            <a href="/app?provider=wss">Enable WSS</a>
+            <a href="/app?provider=wss">Enable WSS!</a>
           ) : (
-            <a href="/app">Enable WebRTC</a>
+            <a href="/app">Enable WebRTC!</a>
           )
         ) : null}{' '}
         {/* WebRTC provider doesn't implement disconnect correctly */}
@@ -126,7 +126,7 @@ export default function App() {
         ) : null}
       </p>
       <p>
-        <b>My Name:</b>{' '}
+        <b>My Name!:</b>{' '}
         <input
           type="text"
           value={userProfile.name}
@@ -143,7 +143,7 @@ export default function App() {
         />
       </p>
       <p>
-        <b>Active users:</b>{' '}
+        <b>Active users!:</b>{' '}
         {activeUsers.map(({name, color, userId}, idx) => (
           <Fragment key={userId}>
             <span style={{color}}>{name}</span>
