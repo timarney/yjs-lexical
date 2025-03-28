@@ -14,11 +14,10 @@ import { WebsocketProvider } from "y-websocket";
 import Theme from "./Editor/Theme";
 import Editor from "./Editor/Editor";
 
+import { GoogleUserProfile } from "./Editor/userProfile";
+
 import { ActiveUsers } from "./Editor/ActiveUsers";
-import {
-  getRandomUserProfile,
-  ActiveUserProfile,
-} from "./Editor/getRandomUserProfile";
+import { getRandomColor, ActiveUserProfile } from "./Editor/userProfile";
 
 const editorConfig = {
   // NOTE: This is critical for collaboration plugin to set editor state to null. It
@@ -46,32 +45,37 @@ const pubnubConfig = {
 };
 
 export default function App() {
-  const [user, setUser] = useState([]);
-  const [profile, setProfile] = useState([]);
+  const [accessToken, setAccessToken] = useState("");
+  const [profile, setProfile] = useState<GoogleUserProfile | null>(null);
 
   const login = useGoogleLogin({
-    onSuccess: (codeResponse) => setUser(codeResponse),
+    onSuccess: (codeResponse) => {
+      setAccessToken(codeResponse.access_token);
+    },
     onError: (error) => console.log("Login Failed:", error),
   });
 
   useEffect(() => {
-    if (user) {
+    if (accessToken !== "") {
+      console.log(accessToken);
       axios
         .get(
-          `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`,
+          `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${accessToken}`,
           {
             headers: {
-              Authorization: `Bearer ${user.access_token}`,
+              Authorization: `Bearer ${accessToken}`,
               Accept: "application/json",
             },
           }
         )
         .then((res) => {
-          setProfile(res.data);
+          console.log(res.data);
+
+          setProfile({ ...res.data, color: getRandomColor() });
         })
         .catch((err) => console.log(err));
     }
-  }, [user]);
+  }, [accessToken]);
 
   // log out function to log the user out of google and set the profile array to null
   const logOut = () => {
@@ -79,13 +83,15 @@ export default function App() {
     setProfile(null);
   };
 
-  const [userProfile, setUserProfile] = useState(() => getRandomUserProfile());
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [yjsProvider, setYjsProvider] = useState<null | Provider>(null);
   const [activeUsers, setActiveUsers] = useState<ActiveUserProfile[]>([]);
 
   const handleAwarenessUpdate = useCallback(() => {
     const awareness = yjsProvider!.awareness!;
+
+    console.log("awareness", awareness.getStates());
+
     setActiveUsers(
       Array.from(awareness.getStates().entries()).map(
         ([userId, { color, name }]) => ({
@@ -109,76 +115,53 @@ export default function App() {
 
   return (
     <div ref={containerRef} className="relative">
-      <div className="flex justify-center items-center p-4">
-        <span className="inline-block mr-2">Name:</span>{" "}
-        <input
-          className="border border-gray-300 p-1"
-          type="text"
-          placeholder="Your name"
-          value={userProfile.name}
-          onChange={(e) =>
-            setUserProfile((profile) => ({ ...profile, name: e.target.value }))
-          }
-        />{" "}
-        <input
-          type="color"
-          className="p-2 h-[50px] w-[50px]"
-          value={userProfile.color}
-          onChange={(e) =>
-            setUserProfile((profile) => ({ ...profile, color: e.target.value }))
-          }
-        />
-      </div>
-
       <div className="absolute top-4 right-4 z-10">
         <ActiveUsers users={activeUsers} />
+        {!profile && (
+          <button
+            onClick={() => {
+              login();
+            }}
+          >
+            Sign in
+          </button>
+        )}
+        {profile && <button onClick={logOut}>Log out</button>}
       </div>
 
-      {profile ? (
-        <div>
-          <img src={profile.picture} alt="user image" />
-          <h3>User Logged in</h3>
-          <p>Name: {profile.name}</p>
-          <p>Email Address: {profile.email}</p>
-          <br />
-          <br />
-          <button onClick={logOut}>Log out</button>
-        </div>
-      ) : (
-        <button onClick={login}>Sign in with Google 🚀 </button>
+      {profile && (
+        <LexicalComposer initialConfig={editorConfig}>
+          {/* With CollaborationPlugin - we MUST NOT use @lexical/react/LexicalHistoryPlugin */}
+          <CollaborationPlugin
+            id="lexical/react-rich-collab"
+            providerFactory={(id, yjsDocMap) => {
+              const doc = new Y.Doc();
+              yjsDocMap.set(id, doc);
+              const provider = new WebsocketProvider(
+                pubnubConfig.endpoint,
+                id,
+                doc,
+                {
+                  WebSocketPolyfill: PubNub as unknown as typeof WebSocket,
+                  params: pubnubConfig,
+                }
+              ) as unknown as Provider;
+
+              // This is a hack to get reference to provider with standard CollaborationPlugin.
+              // To be fixed in future versions of Lexical.
+              setTimeout(() => setYjsProvider(provider), 0);
+              return provider;
+            }}
+            // Unless you have a way to avoid race condition between 2+ users trying to do bootstrap simultaneously
+            // you should never try to bootstrap on client. It's better to perform bootstrap within Yjs server.
+            shouldBootstrap={false}
+            username={profile.name}
+            cursorColor={profile.color}
+            cursorsContainerRef={containerRef}
+          />
+          <Editor />
+        </LexicalComposer>
       )}
-
-      <LexicalComposer initialConfig={editorConfig}>
-        {/* With CollaborationPlugin - we MUST NOT use @lexical/react/LexicalHistoryPlugin */}
-        <CollaborationPlugin
-          id="lexical/react-rich-collab"
-          providerFactory={(id, yjsDocMap) => {
-            const doc = new Y.Doc();
-            yjsDocMap.set(id, doc);
-            const provider = new WebsocketProvider(
-              pubnubConfig.endpoint,
-              id,
-              doc,
-              {
-                WebSocketPolyfill: PubNub as unknown as typeof WebSocket,
-                params: pubnubConfig,
-              }
-            ) as unknown as Provider;
-
-            // This is a hack to get reference to provider with standard CollaborationPlugin.
-            // To be fixed in future versions of Lexical.
-            setTimeout(() => setYjsProvider(provider), 0);
-            return provider;
-          }}
-          // Unless you have a way to avoid race condition between 2+ users trying to do bootstrap simultaneously
-          // you should never try to bootstrap on client. It's better to perform bootstrap within Yjs server.
-          shouldBootstrap={false}
-          username={userProfile.name}
-          cursorColor={userProfile.color}
-          cursorsContainerRef={containerRef}
-        />
-        <Editor />
-      </LexicalComposer>
     </div>
   );
 }
