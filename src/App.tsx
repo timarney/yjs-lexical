@@ -1,5 +1,8 @@
 import PubNub from "./PubNub";
 
+import { googleLogout, useGoogleLogin } from "@react-oauth/google";
+import axios from "axios";
+
 import type { Provider } from "@lexical/yjs";
 
 import { CollaborationPlugin } from "@lexical/react/LexicalCollaborationPlugin";
@@ -38,11 +41,44 @@ const pubnubConfig = {
   auth: import.meta.env.VITE_PUBNUB_AUTH_KEY,
   username: "user-" + Math.random().toString(36).substr(2, 4),
   userId: "user-id-" + Math.random().toString(36).substr(2, 9),
-  publishKey: "pub-c-0207e2ca-5246-4ad9-87fd-c2bed006ef17",
-  subscribeKey: "sub-c-fc2b820b-4687-49c5-83af-b477da7d6b4b",
+  publishKey: "pub-c-2c8347ad-4337-42ff-b87f-bd6de2c9cf11",
+  subscribeKey: "sub-c-58dd0ab3-eeed-462b-a7de-bc06af435381",
 };
 
 export default function App() {
+  const [user, setUser] = useState([]);
+  const [profile, setProfile] = useState([]);
+
+  const login = useGoogleLogin({
+    onSuccess: (codeResponse) => setUser(codeResponse),
+    onError: (error) => console.log("Login Failed:", error),
+  });
+
+  useEffect(() => {
+    if (user) {
+      axios
+        .get(
+          `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`,
+          {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+              Accept: "application/json",
+            },
+          }
+        )
+        .then((res) => {
+          setProfile(res.data);
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [user]);
+
+  // log out function to log the user out of google and set the profile array to null
+  const logOut = () => {
+    googleLogout();
+    setProfile(null);
+  };
+
   const [userProfile, setUserProfile] = useState(() => getRandomUserProfile());
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [yjsProvider, setYjsProvider] = useState<null | Provider>(null);
@@ -97,6 +133,20 @@ export default function App() {
       <div className="absolute top-4 right-4 z-10">
         <ActiveUsers users={activeUsers} />
       </div>
+
+      {profile ? (
+        <div>
+          <img src={profile.picture} alt="user image" />
+          <h3>User Logged in</h3>
+          <p>Name: {profile.name}</p>
+          <p>Email Address: {profile.email}</p>
+          <br />
+          <br />
+          <button onClick={logOut}>Log out</button>
+        </div>
+      ) : (
+        <button onClick={login}>Sign in with Google 🚀 </button>
+      )}
 
       <LexicalComposer initialConfig={editorConfig}>
         {/* With CollaborationPlugin - we MUST NOT use @lexical/react/LexicalHistoryPlugin */}
