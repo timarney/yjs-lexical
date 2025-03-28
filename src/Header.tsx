@@ -1,9 +1,11 @@
+import { ReactNode } from "react";
 import { Logo } from "./Logo";
 
-export const Header = () => {
+export const Header = ({ children }: { children: ReactNode }) => {
   return (
-    <header className="border-b p-4 border-gray-300">
+    <header className="border-b p-4 border-gray-300 flex justify-between items-center">
       <Logo />
+      <div>{children}</div>
     </header>
   );
 };
