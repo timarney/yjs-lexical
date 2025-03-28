@@ -36,7 +36,7 @@ const editorConfig = {
 const pubnubConfig = {
   endpoint: "wss://v6.pubnub3.com",
   channel: editorConfig.namespace,
-  auth: import.meta.env.VITE_PUBNUB_AUTH_KEY,
+  auth: import.meta.env.VITE_PUBNUB_AUTH_KEY || "", // Ensure auth key is not undefined
   publishKey: "pub-c-2c8347ad-4337-42ff-b87f-bd6de2c9cf11",
   subscribeKey: "sub-c-58dd0ab3-eeed-462b-a7de-bc06af435381",
 };
@@ -102,12 +102,23 @@ export const ColabEditor = forwardRef(
                 {
                   WebSocketPolyfill: PubNub as unknown as typeof WebSocket,
                   params: {
-                    ...pubnubConfig,
+                    auth: pubnubConfig.auth, // Ensure auth is passed
+                    publishKey: pubnubConfig.publishKey,
+                    subscribeKey: pubnubConfig.subscribeKey,
                     username: profile.name,
                     userId: profile.id,
                   },
                 }
               ) as unknown as Provider;
+
+              // Debugging logs for WebSocket lifecycle
+              provider.on("status", (event) => {
+                console.log("WebSocket status:", event);
+              });
+
+              provider.on("error", (error) => {
+                console.error("WebSocket error:", error);
+              });
 
               // This is a hack to get reference to provider with standard CollaborationPlugin.
               // To be fixed in future versions of Lexical.
