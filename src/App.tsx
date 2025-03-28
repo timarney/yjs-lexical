@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import { Header } from "./Header";
 import { Footer } from "./Footer";
@@ -17,6 +17,9 @@ import { ColabEditor } from "./ColabEditor";
 export const App = () => {
   const [accessToken, setAccessToken] = useState("");
   const [profile, setProfile] = useState<GoogleUserProfile | null>(null);
+  const colabEditorRef = useRef<{ clearAwarenessState: () => void } | null>(
+    null
+  );
 
   const login = useGoogleLogin({
     onSuccess: (codeResponse) => {
@@ -47,6 +50,9 @@ export const App = () => {
   // log out function to log the user out of google and set the profile array to null
   const logOut = () => {
     googleLogout();
+    if (colabEditorRef.current) {
+      colabEditorRef.current.clearAwarenessState();
+    }
     setProfile(null);
   };
 
@@ -82,8 +88,13 @@ export const App = () => {
       <main className="bg-gray-50">
         {profile && (
           <ColabEditor
+            ref={colabEditorRef}
             setActiveUsers={setActiveUsers}
-            profile={{ name: profile.name, color: profile.color }}
+            profile={{
+              name: profile.name,
+              color: profile.color,
+              id: profile.id,
+            }}
           />
         )}
       </main>

@@ -13,6 +13,9 @@ export const ActiveUsers = ({ users }: ActiveUsersProps) => {
   return (
     <div className="flex -space-x-2">
       {filteredUsers.map(({ name, color, userId }, idx) => {
+        if (!name) {
+          return null;
+        }
         const firstLetter = name[0].toUpperCase();
         return (
           <Fragment key={userId}>
