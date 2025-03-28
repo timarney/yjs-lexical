@@ -23,7 +23,7 @@ const editorConfig = {
   // would indicate that the editor should not try to set any default state
   // (not even empty one), and let collaboration plugin do it instead
   editorState: null,
-  namespace: "documentID-m-28-gcforms",
+  namespace: "documentID-m-28-gcforms-app",
   nodes: [],
   // Handling of errors during update
   onError(error: Error) {
@@ -114,10 +114,6 @@ export const ColabEditor = forwardRef(
               // Debugging logs for WebSocket lifecycle
               provider.on("status", (event) => {
                 console.log("WebSocket status:", event);
-              });
-
-              provider.on("error", (error) => {
-                console.error("WebSocket error:", error);
               });
 
               // This is a hack to get reference to provider with standard CollaborationPlugin.
