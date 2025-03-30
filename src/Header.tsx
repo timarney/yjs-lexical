@@ -1,4 +1,11 @@
+/**
+ * External dependencies
+ */
 import { ReactNode } from "react";
+
+/**
+ * Internal dependencies
+ */
 import { Logo } from "./Logo";
 
 export const Header = ({ children }: { children: ReactNode }) => {

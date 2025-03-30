@@ -1,16 +1,22 @@
+/**
+ * External dependencies
+ */
 import { useEffect, useState, useRef } from "react";
 import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const login_url = "https://www.googleapis.com/oauth2/v1/userinfo";
-
+/**
+ * Internal dependencies
+ */
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { ActiveUsers } from "./Editor/ActiveUsers";
 import { GoogleUserProfile } from "./Editor/userProfile";
 import { getRandomColor, ActiveUserProfile } from "./Editor/userProfile";
 import { ColabEditor } from "./ColabEditor";
+
+const login_url = "https://www.googleapis.com/oauth2/v1/userinfo";
 
 const fetchUser = async (accessToken: string) => {
   const result = await axios.get(`${login_url}?access_token=${accessToken}`, {

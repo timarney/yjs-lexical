@@ -5,12 +5,19 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import {AutoFocusPlugin} from '@lexical/react/LexicalAutoFocusPlugin';
-import {ContentEditable} from '@lexical/react/LexicalContentEditable';
-import {LexicalErrorBoundary} from '@lexical/react/LexicalErrorBoundary';
-import {RichTextPlugin} from '@lexical/react/LexicalRichTextPlugin';
 
-import ToolbarPlugin from './plugins/ToolbarPlugin';
+/**
+ * External dependencies
+ */
+import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
+import { ContentEditable } from "@lexical/react/LexicalContentEditable";
+import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
+import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
+
+/**
+ * Internal dependencies
+ */
+import ToolbarPlugin from "./plugins/ToolbarPlugin";
 
 function Placeholder() {
   return <div className="editor-placeholder">Enter some rich text...</div>;

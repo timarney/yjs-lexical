@@ -1,5 +1,11 @@
+/**
+ * External dependencies
+ */
 import { Fragment } from "react";
 
+/**
+ * Internal dependencies
+ */
 import { ActiveUserProfile } from "./userProfile";
 
 type ActiveUsersProps = {

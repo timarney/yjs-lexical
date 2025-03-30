@@ -6,6 +6,9 @@
  *
  */
 
+/**
+ * External dependencies
+ */
 import {Provider} from '@lexical/yjs';
 import {WebrtcProvider} from 'y-webrtc';
 import {WebsocketProvider} from 'y-websocket';

@@ -1,20 +1,17 @@
 "use client";
 
 /**
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
+ * External dependencies
  */
-import "./styles.css";
-
 import React from "react";
 import ReactDOM from "react-dom/client";
-
-import { App } from "./App.tsx";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { ErrorBoundary } from "react-error-boundary";
+
+/**
+ * Internal dependencies
+ */
+import { App } from "./App.tsx";
 import { ErrorFallback } from "./ErrorFallback";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

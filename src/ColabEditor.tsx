@@ -1,3 +1,6 @@
+/**
+ * External dependencies
+ */
 import {
   useCallback,
   useEffect,
@@ -13,6 +16,9 @@ import { WebsocketProvider } from "y-websocket";
 import { CollaborationPlugin } from "@lexical/react/LexicalCollaborationPlugin";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 
+/**
+ * Internal dependencies
+ */
 import Editor from "./Editor/Editor";
 import Theme from "./Editor/Theme";
 import PubNub from "./PubNub";
