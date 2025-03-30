@@ -16,6 +16,7 @@
     "lexical": "0.28.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-error-boundary": "^5.0.0",
     "tailwindcss": "^4.0.15",
     "wrangler": "^4.3.0",
     "y-webrtc": "^10.3.0",

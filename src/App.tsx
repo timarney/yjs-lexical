@@ -1,17 +1,12 @@
 import { useEffect, useState, useRef } from "react";
-
-import { Header } from "./Header";
-import { Footer } from "./Footer";
-
-import { ActiveUsers } from "./Editor/ActiveUsers";
-
-import { GoogleUserProfile } from "./Editor/userProfile";
-
-import { getRandomColor, ActiveUserProfile } from "./Editor/userProfile";
-
 import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 
+import { Header } from "./Header";
+import { Footer } from "./Footer";
+import { ActiveUsers } from "./Editor/ActiveUsers";
+import { GoogleUserProfile } from "./Editor/userProfile";
+import { getRandomColor, ActiveUserProfile } from "./Editor/userProfile";
 import { ColabEditor } from "./ColabEditor";
 
 export const App = () => {

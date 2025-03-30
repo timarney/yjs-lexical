@@ -37,8 +37,8 @@ const pubnubConfig = {
   endpoint: "wss://v6.pubnub3.com",
   channel: editorConfig.namespace,
   auth: import.meta.env.VITE_PUBNUB_AUTH_KEY || "", // Ensure auth key is not undefined
-  publishKey: "pub-c-2c8347ad-4337-42ff-b87f-bd6de2c9cf11",
-  subscribeKey: "sub-c-58dd0ab3-eeed-462b-a7de-bc06af435381",
+  publishKey: import.meta.env.VITE_PUBNUB_PUB_KEY || "",
+  subscribeKey: import.meta.env.VITE_PUBNUB_SUB_KEY || "",
 };
 
 export interface ColabEditorProps {
