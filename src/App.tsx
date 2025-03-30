@@ -1,6 +1,9 @@
 import { useEffect, useState, useRef } from "react";
 import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
+import Cookies from "js-cookie";
+
+const login_url = "https://www.googleapis.com/oauth2/v1/userinfo";
 
 import { Header } from "./Header";
 import { Footer } from "./Footer";
@@ -8,6 +11,17 @@ import { ActiveUsers } from "./Editor/ActiveUsers";
 import { GoogleUserProfile } from "./Editor/userProfile";
 import { getRandomColor, ActiveUserProfile } from "./Editor/userProfile";
 import { ColabEditor } from "./ColabEditor";
+
+const fetchUser = async (accessToken: string) => {
+  const result = await axios.get(`${login_url}?access_token=${accessToken}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      Accept: "application/json",
+    },
+  });
+
+  return result.data;
+};
 
 export const App = () => {
   const [accessToken, setAccessToken] = useState("");
@@ -18,27 +32,34 @@ export const App = () => {
 
   const login = useGoogleLogin({
     onSuccess: (codeResponse) => {
-      setAccessToken(codeResponse.access_token);
+      const { access_token, expires_in } = codeResponse;
+      setAccessToken(access_token);
+      Cookies.set("access_token", access_token, {
+        expires: new Date(Date.now() + expires_in * 1000),
+      });
     },
     onError: (error) => console.log("Login Failed:", error),
   });
 
+  // Check if the user is already logged in
+  useEffect(() => {
+    const token = Cookies.get("access_token");
+    if (token) {
+      setAccessToken(token);
+    }
+  }, []);
+
+  // Fetch user profile data from Google API
   useEffect(() => {
     if (accessToken !== "") {
-      axios
-        .get(
-          `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${accessToken}`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              Accept: "application/json",
-            },
-          }
-        )
-        .then((res) => {
-          setProfile({ ...res.data, color: getRandomColor() });
+      fetchUser(accessToken)
+        .then((data) => {
+          setProfile({ ...data, color: getRandomColor() });
         })
-        .catch((err) => console.log(err));
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+          setProfile(null);
+        });
     }
   }, [accessToken]);
 

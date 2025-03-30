@@ -8,13 +8,13 @@ import {
 } from "react";
 
 import * as Y from "yjs";
+import type { Provider } from "@lexical/yjs";
 import { WebsocketProvider } from "y-websocket";
-
 import { CollaborationPlugin } from "@lexical/react/LexicalCollaborationPlugin";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
+
 import Editor from "./Editor/Editor";
 import Theme from "./Editor/Theme";
-import type { Provider } from "@lexical/yjs";
 import PubNub from "./PubNub";
 import { ActiveUserProfile } from "./Editor/userProfile";
 
