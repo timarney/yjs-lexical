@@ -14,6 +14,9 @@ import { ErrorBoundary } from "react-error-boundary";
 import { App } from "./App.tsx";
 import { ErrorFallback } from "./ErrorFallback";
 
+
+import "./styles.css";
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <ErrorBoundary fallback={<ErrorFallback />}>
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>

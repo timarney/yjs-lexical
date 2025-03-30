@@ -69,12 +69,16 @@ export const App = () => {
     }
   }, [accessToken]);
 
-  // log out function to log the user out of google and set the profile array to null
+  // Log out function to log the user out of google and set the profile array to null
   const logOut = () => {
     googleLogout();
+    
     if (colabEditorRef.current) {
       colabEditorRef.current.clearAwarenessState();
     }
+
+    Cookies.remove("access_token");
+    setAccessToken("");
     setProfile(null);
   };
 
