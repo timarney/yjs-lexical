@@ -114,6 +114,7 @@ export const App = () => {
       <main className="bg-gray-50">
         {profile && (
           <ColabEditor
+            id={"editor-1"}
             ref={colabEditorRef}
             setActiveUsers={setActiveUsers}
             profile={{

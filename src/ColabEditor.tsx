@@ -47,15 +47,44 @@ const pubnubConfig = {
 };
 
 export interface ColabEditorProps {
+  id: string;
   setActiveUsers: (users: ActiveUserProfile[]) => void;
   profile: { id: string; name: string; color: string };
 }
 
 export const ColabEditor = forwardRef(
-  ({ setActiveUsers, profile }: ColabEditorProps, ref) => {
+  ({ id, setActiveUsers, profile }: ColabEditorProps, ref) => {
     const [yjsProvider, setYjsProvider] = useState<null | Provider>(null);
 
     const containerRef = useRef<HTMLDivElement | null>(null);
+
+    const providerFactory = useCallback(
+      (id: string, yjsDocMap: Map<string, Y.Doc>) => {
+        const doc = new Y.Doc();
+        yjsDocMap.set(id, doc);
+        const provider = new WebsocketProvider(pubnubConfig.endpoint, id, doc, {
+          WebSocketPolyfill: PubNub as unknown as typeof WebSocket,
+          params: {
+            auth: pubnubConfig.auth, // Ensure auth is passed
+            publishKey: pubnubConfig.publishKey,
+            subscribeKey: pubnubConfig.subscribeKey,
+            username: profile.name,
+            userId: profile.id,
+          },
+        }) as unknown as Provider;
+
+        // Debugging logs for WebSocket lifecycle
+        provider.on("status", (event) => {
+          console.log("WebSocket status:", event);
+        });
+
+        // This is a hack to get reference to provider with standard CollaborationPlugin.
+        // To be fixed in future versions of Lexical.
+        setTimeout(() => setYjsProvider(provider), 0);
+        return provider;
+      },
+      [setYjsProvider, profile]
+    );
 
     const handleAwarenessUpdate = useCallback(() => {
       const awareness = yjsProvider!.awareness!;
@@ -96,36 +125,8 @@ export const ColabEditor = forwardRef(
         <LexicalComposer initialConfig={editorConfig}>
           {/* With CollaborationPlugin - we MUST NOT use @lexical/react/LexicalHistoryPlugin */}
           <CollaborationPlugin
-            id="lexical/react-rich-collab"
-            providerFactory={(id, yjsDocMap) => {
-              const doc = new Y.Doc();
-              yjsDocMap.set(id, doc);
-              const provider = new WebsocketProvider(
-                pubnubConfig.endpoint,
-                id,
-                doc,
-                {
-                  WebSocketPolyfill: PubNub as unknown as typeof WebSocket,
-                  params: {
-                    auth: pubnubConfig.auth, // Ensure auth is passed
-                    publishKey: pubnubConfig.publishKey,
-                    subscribeKey: pubnubConfig.subscribeKey,
-                    username: profile.name,
-                    userId: profile.id,
-                  },
-                }
-              ) as unknown as Provider;
-
-              // Debugging logs for WebSocket lifecycle
-              provider.on("status", (event) => {
-                console.log("WebSocket status:", event);
-              });
-
-              // This is a hack to get reference to provider with standard CollaborationPlugin.
-              // To be fixed in future versions of Lexical.
-              setTimeout(() => setYjsProvider(provider), 0);
-              return provider;
-            }}
+            id={id}
+            providerFactory={providerFactory}
             // Unless you have a way to avoid race condition between 2+ users trying to do bootstrap simultaneously
             // you should never try to bootstrap on client. It's better to perform bootstrap within Yjs server.
             shouldBootstrap={false}
